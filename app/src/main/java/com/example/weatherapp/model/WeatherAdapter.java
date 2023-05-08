@@ -13,7 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.weatherapp.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.viewHolder> {
 
@@ -34,7 +37,20 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.viewHold
 
     @Override
     public void onBindViewHolder(@NonNull WeatherAdapter.viewHolder holder, int position) {
-        Picasso.get().load().into(holder.conditionIV);
+
+        WeatherModel model = weatherModelArrayList.get(position);
+        holder.temperatureTV.setText(model.getTemperature() + "°c");
+        Picasso.get().load("http:".concat(model.getIcon())).into(holder.conditionIV);
+        holder.windTV.setText(model.getWindSpeed() + "Km/h");
+        SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat output = new SimpleDateFormat("hh:mm");
+        try {
+            Date t = input.parse(model.getTime());
+            holder.timeTV.setText(output.format(t));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
